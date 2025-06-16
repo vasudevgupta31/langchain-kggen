@@ -194,14 +194,12 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
-
-- = [Documentation](https://github.com/yourusername/langchain-kggen/wiki)
-- = [Issue Tracker](https://github.com/yourusername/langchain-kggen/issues)
-- = [Discussions](https://github.com/yourusername/langchain-kggen/discussions)
 
 ## Acknowledgments
 
+- Noval ideas are borrowed from the paper "KGGen: Extracting Knowledge Graphs from Plain Text with Language Models"
+  by `Belinda Mo`, `Kyssen Yu`, `Joshua Kazdan`, `Proud Mpala`, `Lisa Yu`, `Chris Cundy`, `Charilaos Kanatsoulis`, `Sanmi Koyejo`
+- The implementation is inspired by their pypi project.
 - Built on top of the excellent [LangChain](https://github.com/langchain-ai/langchain) framework
 - Inspired by advances in Large Language Model capabilities for information extraction
 - Thanks to the open-source community for feedback and contributions
