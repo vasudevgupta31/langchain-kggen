@@ -6,18 +6,16 @@
 
 A powerful Python library for generating knowledge graphs from unstructured text using LangChain and Large Language Models (LLMs). Extract entities, relationships, and create structured knowledge representations with support for clustering, chunking, and parallel processing.
 
-![Knowledge Graph Example](./assets/eval1.png)
-
 ## Features
 
-- ** LLM-Powered Extraction**: Leverage any LangChain-compatible language model for intelligent entity and relation extraction
-- ** Knowledge Graph Generation**: Create structured graphs with entities, relations, and edges from raw text or conversations
-- ** Semantic Clustering**: Automatically cluster similar entities and relations using LLM-based semantic understanding
-- ** Parallel Processing**: Handle large texts efficiently with concurrent chunk processing
-- ** Conversation Support**: Extract knowledge graphs from conversational data (chat logs, dialogues)
-- ** Flexible Input**: Process both plain text and structured conversation formats
-- ** Customizable**: Fine-tune extraction with context, chunk sizes, and clustering parameters
-- ** Export Support**: Save generated graphs to JSON format for further analysis
+-  LLM-Powered Extraction: Leverage any LangChain-compatible language model for intelligent entity and relation extraction
+-  Knowledge Graph Generation: Create structured graphs with entities, relations, and edges from raw text or conversations
+-  Semantic Clustering: Automatically cluster similar entities and relations using LLM-based semantic understanding
+-  Parallel Processing: Handle large texts efficiently with concurrent chunk processing
+-  Conversation Support: Extract knowledge graphs from conversational data (chat logs, dialogues)
+-  Flexible Input: Process both plain text and structured conversation formats
+-  Customizable: Fine-tune extraction with context, chunk sizes, and clustering parameters
+-  Export Support: Save generated graphs to JSON format for further analysis
 
 ## Installation
 
@@ -145,6 +143,9 @@ class Graph(BaseModel):
     entity_clusters: Optional[dict[str, set[str]]]  # Entity clustering mappings
     edge_clusters: Optional[dict[str, set[str]]]    # Edge clustering mappings
 ```
+## Eval report 
+The table shows average score across 10 text inputs of various complexity then using a frontier high rasining LLM as judge:
+![Knowledge Graph Example](./assets/eval1.png)
 
 ##  Configuration Options
 
