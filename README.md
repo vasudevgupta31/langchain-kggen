@@ -25,6 +25,11 @@ Note: This project and the contents of it are inspired by KGgen as proposed by (
 pip install langchain-kggen
 ```
 
+## Framework workflow
+As proposed in the original paper.
+![Framework](./assets/kggen-dig.png)
+
+
 ## Quick Start
 
 ### Basic Usage
