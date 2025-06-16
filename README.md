@@ -27,7 +27,7 @@ pip install langchain-kggen
 
 ## Framework workflow
 As proposed in the original paper.
-![Framework](./assets/kggen-dig.png)
+![Framework](./assets/kggen-diag.png)
 
 
 ## Quick Start
