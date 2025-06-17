@@ -80,8 +80,8 @@ print("Edges:", graph.edges)
 # Visualise
 from langchain_kggen.utils.viz import draw_graph
 draw_graph(graph)
-![output](./assets/graph.png)
 ```
+![output](./assets/graph.png)
 
 ### Processing Conversations
 
