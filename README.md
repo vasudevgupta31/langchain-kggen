@@ -7,8 +7,7 @@ A powerful Python library for generating knowledge graphs from unstructured text
 
 
 > [!NOTE]  
-> This project and the contents of it are inspired by KGGen as proposed in [this paper](https://arxiv.org/pdf/2502.09956), Feb 2025.
-> ⚠️ This project is inspired by KGgen and may reuse ideas and patterns from the original KGgen GitHub repository, which is also licensed under MIT.
+> ⚠️ Acknowledgement: This project is inspired by KGGen, as proposed in this paper (Feb 2025). It may reuse ideas and design patterns from the original KGGen implementation, which is also licensed under the MIT License.
 
 
 ## Table of Contents
