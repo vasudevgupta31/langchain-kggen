@@ -6,6 +6,7 @@
 A powerful Python library for generating knowledge graphs from unstructured text using LangChain and Large Language Models (LLMs). Extract entities, relationships, and create structured knowledge representations with support for clustering, chunking, and parallel processing.
 
 Note: This project and the contents of it are inspired by KGGen as proposed in [this paper](https://arxiv.org/pdf/2502.09956), Feb 2025.
+⚠️ This project is inspired by KGgen and may reuse ideas and patterns from the original KGgen GitHub repository, which is also licensed under MIT.
 
 ## Table of Contents
 
@@ -239,6 +240,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for full details.
+⚠️ This project is inspired by KGgen and may reuse ideas and patterns from the original KGgen GitHub repository, which is also licensed under MIT.
 
 ## Acknowledgments
 
