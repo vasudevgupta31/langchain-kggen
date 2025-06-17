@@ -6,18 +6,38 @@
 
 A powerful Python library for generating knowledge graphs from unstructured text using LangChain and Large Language Models (LLMs). Extract entities, relationships, and create structured knowledge representations with support for clustering, chunking, and parallel processing.
 
-Note: This project and the contents of it are inspired by KGgen as proposed by (https://arxiv.org/pdf/2502.09956) dated 14 Feb 2025.
+Note: This project and the contents of it are inspired by KGGen as proposed in [this paper](https://arxiv.org/pdf/2502.09956), Feb 2025.
+
+## Table of Contents
+
+* [Features](#features)
+* [Installation](#installation)
+* [Framework Workflow](#framework-workflow)
+* [Quick Start](#quick-start)
+* [Advanced Features](#advanced-features)
+* [Standalone Clustering](#standalone-clustering)
+* [Aggregating Multiple Graphs](#aggregating-multiple-graphs)
+* [Long Text Extraction](#long-text-extraction)
+* [Architecture](#architecture)
+* [Graph Structure](#graph-structure)
+* [Eval Report](#eval-report)
+* [Configuration Options](#configuration-options)
+* [Use Cases](#use-cases)
+* [Best Practices](#best-practices)
+* [Contributing](#contributing)
+* [License](#license)
+* [Acknowledgments](#acknowledgments)
 
 ## Features
 
--  `LLM-Powered Extraction`: Leverage any LangChain-compatible language model for intelligent entity and relation extraction
--  `Knowledge Graph Generation`: Create structured graphs with entities, relations, and edges from raw text or conversations
--  `Semantic Clustering`: Automatically cluster similar entities and relations using LLM-based semantic understanding
--  `Parallel Processing`: Handle large texts efficiently with concurrent chunk processing
--  `Conversation Support`: Extract knowledge graphs from conversational data (chat logs, dialogues)
--  `Flexible Input`: Process both plain text and structured conversation formats
--  `Customizable`: Fine-tune extraction with context, chunk sizes, and clustering parameters
--  `Export Support`: Save generated graphs to JSON format for further analysis
+* **LLM-Powered Extraction**: Leverage any LangChain-compatible language model for intelligent entity and relation extraction
+* **Knowledge Graph Generation**: Create structured graphs with entities, relations, and edges from raw text or conversations
+* **Semantic Clustering**: Automatically cluster similar entities and relations using LLM-based semantic understanding
+* **Parallel Processing**: Handle large texts efficiently with concurrent chunk processing
+* **Conversation Support**: Extract knowledge graphs from conversational data (chat logs, dialogues)
+* **Flexible Input**: Process both plain text and structured conversation formats
+* **Customizable**: Fine-tune extraction with context, chunk sizes, and clustering parameters
+* **Export Support**: Save generated graphs to JSON format for further analysis
 
 ## Installation
 
@@ -25,10 +45,11 @@ Note: This project and the contents of it are inspired by KGgen as proposed by (
 pip install langchain-kggen
 ```
 
-## Framework workflow
-As proposed in the original paper.
-![Framework](./assets/kggen-diag.png)
+## Framework Workflow
 
+As proposed in the original paper:
+
+![Framework](./assets/kggen-diag.png)
 
 ## Quick Start
 
@@ -36,35 +57,35 @@ As proposed in the original paper.
 
 ```python
 from langchain_kggen import KGGen
-from langchain_openai import ChatOpenAI  # or any LangChain-compatible LLM
+from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 
 # Initialize your LLM
 llm = ChatOpenAI(model="gpt-4o")
-llm = Chatollama(model='deepseek-r1:32b')  # if working with local models
+llm = ChatOllama(model='deepseek-r1:32b')  # for local models
 
-# Your input text
 text = """
-Apple Inc. is a technology company founded by Steve Jobs in 1976. 
-The company is headquartered in Cupertino, California. 
-Tim Cook is the current CEO of Apple.
+Linda is the mother of Joshua. Joshua is also called Josh. Ben is the brother of Josh.
+Andrew is the father of Josh. Judy is the sister of Andrew. Josh is the nephew of Judy.
+Judy is the aunt of Josh. The family lives in California.
 """
 
-# Create KGGen instance
 kg_generator = KGGen(llm=llm, input_data=text)
-
-# Generate knowledge graph
 graph = kg_generator.generate()
 
 print("Entities:", graph.entities)
 print("Relations:", graph.relations)
 print("Edges:", graph.edges)
+
+# Visualise
+from langchain_kggen.utils.viz import draw_graph
+draw_graph(graph)
+![output](./assets/graph.png)
 ```
 
 ### Processing Conversations
 
 ```python
-# Conversation format
 conversation = [
     {"role": "user", "content": "Tell me about artificial intelligence"},
     {"role": "assistant", "content": "AI is a field of computer science focused on creating intelligent machines"},
@@ -72,136 +93,157 @@ conversation = [
     {"role": "assistant", "content": "The main types include narrow AI, general AI, and superintelligence"}
 ]
 
-# Generate knowledge graph from conversation
 kg_generator = KGGen(llm=llm, input_data=conversation)
 graph = kg_generator.generate()
 ```
 
-### Advanced Features
+## Advanced Features
 
 ```python
-# Generate with clustering and chunking
 graph = kg_generator.generate(
-    context="Technology and business domain",  # Additional context
-    chunk_size=1000,                          # Split large texts
-    cluster=True,                             # Enable semantic clustering
-    max_workers=5,                            # Parallel processing
-    llm_delay=1.0,                           # Rate limiting
-    output_folder="./output",                 # Save to file
-    file_name="my_knowledge_graph.json"      # Custom filename
+    context="Technology and business domain",
+    chunk_size=1000,
+    cluster=True,
+    max_workers=5,
+    llm_delay=1.0,
+    output_folder="./output",
+    file_name="my_knowledge_graph.json"
 )
 
-# Access clustering information
 if graph.entity_clusters:
     print("Entity clusters:", graph.entity_clusters)
 if graph.edge_clusters:
     print("Edge clusters:", graph.edge_clusters)
 ```
 
-### Standalone Clustering
+## Standalone Clustering
 
 ```python
-# Cluster an existing graph
 clustered_graph = kg_generator.cluster(
     graph=graph,
     context="Business and technology context"
 )
 ```
 
-### Aggregating Multiple Graphs
+## Aggregating Multiple Graphs
 
 ```python
-# Combine multiple knowledge graphs
 graph1 = kg_generator.generate()
 graph2 = kg_generator.generate()
-
 aggregated_graph = kg_generator.aggregate([graph1, graph2])
 ```
 
-## <Architecture
+## Long Text Extraction
 
-The library consists of several key components:
+```python
+with open("large_document.txt", "r") as f:
+    large_text = f.read()
+
+kg_generator = KGGen(llm=llm, input_data=large_text)
+
+graph = kg_generator.generate(
+    context="Domain-specific context for your document",
+    chunk_size=5000,
+    cluster=True,
+    max_workers=8,
+    llm_delay=1.5,
+    output_folder="./output",
+    file_name="large_document_kg.json"
+)
+
+print(f"Extracted {len(graph.entities)} entities from large text")
+print(f"Found {len(graph.relations)} relationships")
+
+if graph.entity_clusters:
+    for representative, variants in graph.entity_clusters.items():
+        if len(variants) > 1:
+            print(f"Clustered '{representative}': {variants}")
+```
+
+**Key Benefits for Long Texts**:
+
+* **Chunking**: Breaks large texts into manageable pieces while respecting sentence boundaries
+* **Parallel Processing**: Processes multiple chunks concurrently
+* **Cross-chunk Clustering**: Merges similar entities across segments
+* **Semantic Coherence**: Maintains contextual integrity across documents
+
+## Architecture
 
 ### Core Classes
 
-- **`KGGen`**: Main interface for knowledge graph generation
-- **`Graph`**: Pydantic model representing a knowledge graph structure
+* `KGGen`: Main interface for knowledge graph generation
+* `Graph`: Pydantic model representing a knowledge graph
 
 ### Extraction Modules
 
-- **`get_entities`**: Extract entities (subjects/objects) from text
-- **`get_relations`**: Extract subject-predicate-object relations
-- **`get_clusters`**: Perform semantic clustering of entities and relations
+* `get_entities`: Extract entities from text
+* `get_relations`: Extract subject-predicate-object triples
+* `get_clusters`: Perform semantic clustering
 
 ### Utilities
 
-- **`chunk_text`**: Intelligent text chunking with sentence boundary respect
-- **`state`**: Graph data models and structures
+* `chunk_text`: Sentence-boundary-aware chunking
+* `draw_graph`: Draws graph with networkx for quick visual insights, clumsy for very large texts
+* `state`: Graph data models and state structures
 
 ## Graph Structure
 
-The generated `Graph` object contains:
-
 ```python
 class Graph(BaseModel):
-    entities: set[str]                              # All unique entities
-    edges: set[str]                                 # All unique predicates/relations
-    relations: set[Tuple[str, str, str]]           # (subject, predicate, object) triples
-    entity_clusters: Optional[dict[str, set[str]]]  # Entity clustering mappings
-    edge_clusters: Optional[dict[str, set[str]]]    # Edge clustering mappings
+    entities: set[str]
+    edges: set[str]
+    relations: set[Tuple[str, str, str]]
+    entity_clusters: Optional[dict[str, set[str]]]
+    edge_clusters: Optional[dict[str, set[str]]]
 ```
-## Eval report 
-The table shows average score across 10 text inputs of various complexity then using a frontier high rasining LLM as judge:
+
+## Eval Report
+
+The model was evaluated on 10 diverse samples using a high-performing LLM as the judge. The image below shows the average quality scores across varying complexity levels:
+
 ![Knowledge Graph Example](./assets/eval1.png)
 
-##  Configuration Options
+## Configuration Options
 
-### Generation Parameters
+| Parameter       | Type            | Default                 | Description                |
+| --------------- | --------------- | ----------------------- | -------------------------- |
+| `llm`           | `BaseChatModel` | None                    | Override default LLM       |
+| `context`       | `str`           | ""                      | Additional context         |
+| `chunk_size`    | `int`           | None                    | Chunk size in characters   |
+| `cluster`       | `bool`          | False                   | Enable semantic clustering |
+| `max_workers`   | `int`           | 10                      | Parallel threads           |
+| `llm_delay`     | `float`         | 2.0                     | Delay between LLM calls    |
+| `output_folder` | `str`           | None                    | Save location              |
+| `file_name`     | `str`           | 'knowledge\_graph.json' | Output filename            |
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `llm` | `BaseChatModel` | None | Override default LLM |
-| `context` | `str` | `""` | Additional context for extraction |
-| `chunk_size` | `int` | None | Split text into chunks |
-| `cluster` | `bool` | `False` | Enable semantic clustering |
-| `max_workers` | `int` | `10` | Parallel processing threads |
-| `llm_delay` | `float` | `2.0` | Delay between LLM calls |
-| `output_folder` | `str` | None | Save location |
-| `file_name` | `str` | `'knowledge_graph.json'` | Output filename |
+## Use Cases
 
-##  Use Cases
-
-- ** Document Analysis**: Extract key concepts and relationships from research papers, reports
-- ** Conversation Mining**: Analyze chat logs, interviews, customer support tickets
-- ** News Processing**: Build knowledge bases from news articles and press releases
-- ** Information Extraction**: Transform unstructured data into structured knowledge
-- ** AI Training Data**: Create structured datasets for machine learning applications
-- ** Business Intelligence**: Extract insights from business documents and communications
+* **Document Analysis**: Extract insights from papers, reports
+* **Conversation Mining**: Analyze dialogues, support logs
+* **News Processing**: Build structured knowledge from articles
+* **Information Extraction**: Turn unstructured data into triples
+* **AI Training Data**: Generate structured inputs for ML tasks
+* **Business Intelligence**: Extract graphs from emails, memos, docs
 
 ## Best Practices
 
-1. **Context Matters**: Provide relevant context to improve extraction accuracy
-2. **Chunk Large Texts**: Use chunking for texts > 2000 tokens to avoid LLM limits
-3. **Enable Clustering**: Use clustering to merge similar entities and reduce noise
-4. **Rate Limiting**: Adjust `llm_delay` based on your LLM provider's rate limits
-5. **Iterative Refinement**: Review outputs and adjust context/parameters as needed
+1. Provide rich context for higher fidelity results
+2. Use chunking for large texts to avoid context loss
+3. Enable clustering for disambiguation
+4. Respect API rate limits with `llm_delay`
+5. Review and refine generation parameters iteratively
 
-##  Contributing
+## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for how to get involved.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for full details.
 
 ## Acknowledgments
 
-- Noval ideas are borrowed from the paper "KGGen: Extracting Knowledge Graphs from Plain Text with Language Models"
-  by `Belinda Mo`, `Kyssen Yu`, `Joshua Kazdan`, `Proud Mpala`, `Lisa Yu`, `Chris Cundy`, `Charilaos Kanatsoulis`, `Sanmi Koyejo`
-- The implementation is inspired by their pypi project.
-- Built on top of the excellent [LangChain](https://github.com/langchain-ai/langchain) framework
-- Inspired by advances in Large Language Model capabilities for information extraction
-- Thanks to the open-source community for feedback and contributions
-
----
+* Novel ideas derived from the paper *"KGGen: Extracting Knowledge Graphs from Plain Text with Language Models"* by Belinda Mo et al.
+* Implementation inspired by their published [PyPI project](https://pypi.org/project/kggen/)
+* Built atop the excellent [LangChain](https://github.com/langchain-ai/langchain)
+* Thanks to the open-source community for support and contributions

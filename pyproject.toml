@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langchain-kggen"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
     {name = "Vasudev Gupta", email = "guptavasudelhi@gmail.com"},
 ]
@@ -51,6 +51,7 @@ dev = [
     "flake8>=6.0",
     "mypy>=1.0",
     "pre-commit>=3.0",
+    "networkx>=3.5"
 ]
 
 [project.urls]
